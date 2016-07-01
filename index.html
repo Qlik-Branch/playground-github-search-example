@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Playground Search Example</title>
+    <link rel="stylesheet" href="http://localhost:3000/css/playground.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/resources/playground-ui.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/resources/sense-search.min.css"/>
+    <link rel="stylesheet" href="/resources/styles.css"/>
+  </head>
+  <body>
+    <playground component="notifier" id='not1' class="notifier-cover"></playground>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1>Playground Search Example</h1>
+        </div>
+        <div class="col-md-12">
+          <sense-search-input id="myInput" mode="associations"></sense-search-input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <sense-search-results id="myResults"></sense-search-results>
+        </div>
+      </div>
+    </div>
+
+
+    <script type="text/javascript" src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/node_modules/qsocks/qsocks.bundle.js"></script>
+    <script type="text/javascript" src="/resources/playground-js-api.js"></script>
+    <script type="text/javascript" src="/resources/playground-ui.js"></script>
+    <script type="text/javascript" src="/resources/sense-search.js"></script>
+    <script type="text/javascript" src="/resources/script.js"></script>
+  </body>
+</html>

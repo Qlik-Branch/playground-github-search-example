@@ -1,0 +1,24 @@
+{
+  "name": "playground-search-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "jquery": "^3.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Qlik-Branch/playground-search-example.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Qlik-Branch/playground-search-example/issues"
+  },
+  "homepage": "https://github.com/Qlik-Branch/playground-search-example#readme"
+}
