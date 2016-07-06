@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = {
-  host: "http://localhost:3000"
+  host: "http://playground.qlik.com"
 }
 
 },{}],2:[function(require,module,exports){
@@ -2789,7 +2789,7 @@ function Connection(config) {
     var disconnect = config ? config.disconnect : null;
 
     var IS_SERVICE_CONNECTION = false;
-    
+
     if (config && config.host && IS_NODE) {
         if ( config.headers.hasOwnPropertyCI('X-Qlik-User') ) {
             IS_SERVICE_CONNECTION = true;
@@ -2810,7 +2810,7 @@ function Connection(config) {
     this.seqid = 0;
     this.pending = {};
     this.handles = {};
-    
+
     this.debug = config.debug;
     this.debugIsFunction = typeof this.debug === 'function';
 
@@ -2842,7 +2842,7 @@ function Connection(config) {
         var msg = JSON.parse(ev.data);
         if (this.debug) {
             if( this.debugIsFunction ) {
-                this.debug('Incoming', msg);            
+                this.debug('Incoming', msg);
             } else {
                 console.log('Incoming', msg);
             }
@@ -2953,7 +2953,7 @@ Connection.prototype.ask = function (handle, method, args, id) {
 
     if (this.debug) {
         if( this.debugIsFunction ) {
-            this.debug('Outgoing', request);            
+            this.debug('Outgoing', request);
         } else {
             console.log('Outgoing', request);
         }
@@ -2980,6 +2980,7 @@ Connection.prototype.close = function () {
     return this.ws.close();
 };
 module.exports = qsocks;
+
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./lib/doc":16,"./lib/field":17,"./lib/genericBookmark":18,"./lib/genericDimension":19,"./lib/genericMeasure":20,"./lib/genericObject":21,"./lib/genericVariable":22,"./lib/global":23,"_process":7,"promise":8,"ws":4}],25:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
@@ -3640,8 +3641,9 @@ var qlik_playground = function () {
       }
     },
     connectToApp: {
-      value: function value(appName, apiKey) {
+      value: function value(appName, apiKey, apiFramework) {
         var that = this;
+        var reloadFinished = false;
         this.notification.deliver({
           title: "Please wait...",
           message: "Preparing App"
@@ -3649,26 +3651,41 @@ var qlik_playground = function () {
         return new Promise(function (resolve, reject) {
           get(envConfig.host + "/api/getAppInfo?apikey=" + apiKey + "&app=" + appName).then(function (response) {
             var config = JSON.parse(response);
-            that.socket.Connect(config).then(function (global) {
-              global.createSessionApp().then(function (qApp) {
-                var script = config.connectionString += "; ";
-                script += config.loadscript;
-                qApp.setScript(script).then(function () {
-                  console.log(script);
-                  qApp.doReload().then(function (response) {
-                    that.notification.deliver({
-                      title: "Ready",
-                      duration: 100
+            if (config.err) {
+              console.log(config.err);
+            } else {
+              that.socket.Connect(config).then(function (global) {
+                global.createSessionApp().then(function (qApp) {
+                  var script = config.connectionString += "; ";
+                  script += config.loadscript;
+                  qApp.setScript(script).then(function () {
+                    console.log(script);
+                    qApp.doReload().then(function (response) {
+                      reloadFinished = true;
+                      that.notification.deliver({
+                        title: "Ready",
+                        duration: 100
+                      });
+                      resolve(qApp);
                     });
-                    resolve(qApp);
+                    getReloadProgress(global);
+
+                    function getReloadProgress(g) {
+                      g.getProgress(0).then(function (reloadProgress) {
+                        console.log(reloadProgress);
+                        if (!reloadFinished) {
+                          getReloadProgress(g);
+                        }
+                      });
+                    }
                   });
+                }, function (err) {
+                  reject(err);
                 });
               }, function (err) {
                 reject(err);
               });
-            }, function (err) {
-              reject(err);
-            });
+            }
           });
         });
       }
