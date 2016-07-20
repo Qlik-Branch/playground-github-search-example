@@ -7,7 +7,9 @@
     "bootstrap": "^3.3.6",
     "express": "^4.14.0",
     "jquery": "^3.0.0",
-    "qsocks": "^3.0.1"
+    "playground-js-api": "^0.1.2",
+    "qsocks": "^3.0.1",
+    "sense-search-components": "^1.0.0"
   },
   "devDependencies": {},
   "scripts": {
