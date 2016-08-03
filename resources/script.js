@@ -1,5 +1,5 @@
 var config = {};
-Playground.authenticate(config.apiKey).then(function(ticket){
+Playground.authenticate(config, "qsocks").then(function(ticket){
   config.ticket = ticket;
   qsocks.ConnectOpenApp(config).then(function(result){
     var global = result[0];
